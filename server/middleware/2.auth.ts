@@ -2,7 +2,13 @@ export default eventHandler((event) => {
   const method = getMethod(event)
   // ① 预检请求不要鉴权，直接放行
   if (method === 'OPTIONS') {
-    return
+    setHeader(event, 'Access-Control-Allow-Origin', '*')
+    setHeader(event, 'Access-Control-Allow-Credentials', 'true')
+    setHeader(event, 'Access-Control-Allow-Headers', '*')
+    setHeader(event, 'Access-Control-Allow-Methods', '*')
+    setResponseStatus(event, 204)
+    // 注意这里要 return 一个响应，不要什么都不干，否则还会往下走然后 404
+    return '' // 空 body 即可
   }
   const authHeader =
     getHeader(event, 'authorization') || getHeader(event, 'Authorization')
